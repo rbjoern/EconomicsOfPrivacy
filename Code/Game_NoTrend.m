@@ -2,7 +2,7 @@ clear all; clc; close all;
 
 %% GLOBAL PARAMETER DEFAULTS
 %Randomization
-seed = 123; 
+seed = 163; 
     rng(seed);
 
 %Number of iterations of simulations
@@ -29,7 +29,7 @@ pr_value_lambda              = 0.5;
 pr_value_alpha               = 0.5; 
 pr_value_kp                  = 1; 
 pr_value_b                   = 0.5;
-prn_value_x_constant         = 1; 
+prn_value_x_constant         = 0.3; 
 
 %Figures?
 fig =0; 
@@ -65,7 +65,10 @@ for n = 1:2
                 , agt_value_utility ...
                 , pr_value_utility ...
                 , agt_exp_avgexptheta_t ... 
-                , agt_value_avgutility ... 
+                , agt_value_avgutility ...
+                , agt_value_contFB... 
+                , agt_value_utilityFB ...
+                , pr_value_utilityFB ...
             ] = ...
 EoP.SimulateGame( seed ...
                  ,T ...
@@ -130,7 +133,7 @@ figure;  set(gcf, 'Position', [80,80, 800, 800])
         %fig1.linestyle = '-|--|-|-';
         set(fig1, {'LineStyle'}, {'-';'--';'-';'-';'-'});
         set(fig1, {'Marker'}, {'none';'none';'o';'^';'square'}); 
-        set(fig1, 'Markersize', 3); 
+        set(fig1, 'Markersize', 2); 
         set(fig1, {'MarkerFaceColor'}, {[0.4940    0.1840    0.5560];[0.6350    0.0780    0.1840]...
                                 ;[0    0.4470    0.7410];[0.3010    0.7450    0.9330];[0.8500    0.3250    0.0980]});
         %set(fig1, 'Linewidth', 1.2);
@@ -159,8 +162,8 @@ figure;  set(gcf, 'Position', [80,80, 800, 800])
 %         %set(fig1, {'LineStyle'}, {'-';'-';'-';'-'});
 %    
         subplot(2,2,[3 4])
-        fig3 = plot([pr_value_utilityx, agt_value_avgutilityx]);
-        lgd = legend('Principal (low x)','Principal (high x)', 'Average agent (low x)','Average agent (high x)', ...
+        fig3 = plot([pr_value_utilityFB, pr_value_utilityx, agt_value_utilityFB, agt_value_avgutilityx]);
+        lgd = legend('Principal (FB)','Principal (low x)','Principal (high x)', 'Avg. agent (FB)', 'Avg. agent (low x)','Avg. agent (high x)', ...
             'Location', 'northwest');
         lgd.FontSize = 8;
         lgd.FontName = 'Century';
@@ -169,12 +172,14 @@ figure;  set(gcf, 'Position', [80,80, 800, 800])
         title('Utility','FontName','Century'); 
         xlabel('Time period','FontName','Century');
         ylabel('Utility','FontName','Century');
-        set(fig3, {'Color'}, {[  0    0.4470    0.7410]...
-                                ;[0.3010    0.7450    0.9330];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
-        set(fig3, {'Marker'}, {'o';'^';'square';'diamond'}); 
-        set(fig3, 'Markersize', 3); 
-        set(fig3, {'MarkerFaceColor'}, {[  0    0.4470    0.7410]...
-                                ;[0.3010    0.7450    0.9330];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
+        set(fig3, {'Color'}, {[0.4940    0.1840    0.5560];[  0    0.4470    0.7410]...
+                                 ;[0.3010    0.7450    0.9330]...
+                                 ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
+        set(fig3, {'Marker'}, {'none';'o';'^';'x';'square';'diamond'}); 
+        set(fig3, 'Markersize', 2); 
+        set(fig3, {'MarkerFaceColor'}, {[0.4940    0.1840    0.5560];[  0    0.4470    0.7410]...
+                                 ;[0.3010    0.7450    0.9330]...
+                                 ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
         
         %print('C:\Users\rbjoe\Dropbox\Kugejl\9. semester\Economics of Privacy\Matlab\Images\1_Expectations', '-depsc'); 
    end %End of figures    

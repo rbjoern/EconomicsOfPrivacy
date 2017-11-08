@@ -49,7 +49,7 @@ for n = 1:2
 
 %% CHANGE SPECIFIC PARAMETERS
     if n==2
-    prn_value_x_constant = 10*prn_value_x_constant;
+    prn_value_x_constant = 100*prn_value_x_constant;
     end 
 
 %% RUN GAME FROM FUNCTION
@@ -65,7 +65,10 @@ for n = 1:2
                 , agt_value_utility ...
                 , pr_value_utility ...
                 , agt_exp_avgexptheta_t ... 
-                , agt_value_avgutility ... 
+                , agt_value_avgutility ...
+                , agt_value_contFB... 
+                , agt_value_utilityFB ...
+                , pr_value_utilityFB ...
             ] = ...
 EoP.SimulateGame( seed ...
                  ,T ...
@@ -125,13 +128,13 @@ figure;  set(gcf, 'Position', [80,80, 800, 800])
         set(lgd,'position',[lgd_pos(1), lgd_pos(2), 1.4*lgd_pos(3), lgd_pos(4)])
         title('Evolution of expectations','FontName','Century');
         xlabel('Time period','FontName','Century');
-        refline([0 0])
+        %refline([0 0])
         %ylim([0 13])
         ylabel('Value of public good','FontName','Century');
         %fig1.linestyle = '-|--|-|-';
         set(fig1, {'LineStyle'}, {'-';'--';'-';'-';'-'});
         set(fig1, {'Marker'}, {'none';'none';'o';'^';'square'}); 
-        set(fig1, 'Markersize', 3); 
+        set(fig1, 'Markersize', 2); 
         set(fig1, {'MarkerFaceColor'}, {[0.4940    0.1840    0.5560];[0.6350    0.0780    0.1840]...
                                 ;[0    0.4470    0.7410];[0.3010    0.7450    0.9330];[0.8500    0.3250    0.0980]});
         %set(fig1, 'Linewidth', 1.2);
@@ -141,8 +144,8 @@ figure;  set(gcf, 'Position', [80,80, 800, 800])
         
         
         subplot(2,2,[3 4])
-        fig2 = plot([pr_value_aPFB_t,pr_value_aP_tx,agt_value_abaractual_tx]);
-        lgd = legend('Principals first-best','Principal (low x)','Principal (high x)', 'Average agent (low x)','Average agent (high x)',...
+        fig2 = plot([pr_value_aPFB_t,pr_value_aP_tx,agt_value_contFB, agt_value_abaractual_tx]);
+        lgd = legend('Principal (FB)','Principal (low x)','Principal (high x)', 'Avg. agent (FB)', 'Avg. agent (low x)','Avg. agent (high x)', ...
             'Location', 'northwest');
         lgd.FontSize = 8;
         lgd.FontName = 'Century';
@@ -151,12 +154,14 @@ figure;  set(gcf, 'Position', [80,80, 800, 800])
         title('Contributions','FontName','Century');
         xlabel('Time period','FontName','Century');
         ylabel('Contributions','FontName','Century');
-        set(fig2, {'Color'}, {[0.4940    0.1840    0.5560];[0   0.4470    0.7410]...
-                                ;[0.3010    0.7450    0.9330];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
-        set(fig2, {'Marker'}, {'none';'o';'^';'square';'diamond'}); 
-        set(fig2, 'Markersize', 3); 
+        set(fig2, {'Color'}, {[0.4940    0.1840    0.5560];[  0    0.4470    0.7410]...
+                                 ;[0.3010    0.7450    0.9330]...
+                                 ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
+        set(fig2, {'Marker'}, {'none';'o';'^';'x';'square';'diamond'});  
+        set(fig2, 'Markersize', 2); 
         set(fig2, {'MarkerFaceColor'}, {[0.4940    0.1840    0.5560];[  0    0.4470    0.7410]...
-                                ;[0.3010    0.7450    0.9330];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
+                                 ;[0.3010    0.7450    0.9330]...
+                                 ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
         %set(fig1, {'LineStyle'}, {'-';'-';'-';'-'});
    
 %         subplot(2,2,[3 4])

@@ -114,24 +114,24 @@ fig_here = 1;
 if fig_here == 1;
 
 %%%% FIGURE 1. How do expectations evolve over time?
-figure;  set(gcf, 'Position', [80,80, 800, 800])
+figure;  set(gcf, 'Position', [80,80, 800, 300])
         %subplot(2,2,[1 2])
         fig1 = plot([pop_value_theta_t(:,1), pr_exp_theta_t_x]);
-        lgd = legend('True value', 'Principal (low x)','Principal (high x)',...
+        lgd = legend('Societal preferences', 'Belief (high privacy)','Belief (low privacy)',...
             'Location', 'northwest');
-        lgd.FontSize = 8;
+        lgd.FontSize = 10;
         lgd.FontName = 'Century';
         lgd_pos = get(lgd,'position'); 
-        set(lgd,'position',[lgd_pos(1), lgd_pos(2), 1.4*lgd_pos(3), lgd_pos(4)])
+        set(lgd,'position',[lgd_pos(1), lgd_pos(2), 1.5*lgd_pos(3), lgd_pos(4)])
         title('Evolution of expectations','FontName','Century');
         xlabel('Time period','FontName','Century');
         %refline([0 0])
-        %ylim([0 13])
+        ylim([-10 30])
         ylabel('Value of public good','FontName','Century');
         %fig1.linestyle = '-|--|-|-';
         set(fig1, {'LineStyle'}, {'-';'-';'-'});
         set(fig1, {'Marker'}, {'none';'o';'^'}); 
-        set(fig1, 'Markersize', 3); 
+        set(fig1, 'Markersize', 2); 
         set(fig1, {'MarkerFaceColor'}, {[0.4940    0.1840    0.5560]...
                                 ;[0    0.4470    0.7410];[0.3010    0.7450    0.9330]});
         %set(fig1, 'Linewidth', 1.2);
@@ -182,4 +182,4 @@ figure;  set(gcf, 'Position', [80,80, 800, 800])
      
  
 
-print('C:\Users\rbjoe\Dropbox\Kugejl\9. semester\Economics of Privacy\Matlab\Images\Figure_BigShock', '-depsc'); 
+print('C:\Users\rbjoe\Dropbox\Kugejl\9. semester\Economics of Privacy\Matlab\Images\Figure_Intro', '-depsc'); 

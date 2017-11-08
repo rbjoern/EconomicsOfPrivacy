@@ -57,7 +57,7 @@ pr_value_lambda              = 0.5;
 pr_value_alpha               = 0.8; 
 pr_value_kp                  = 1; 
 pr_value_b                   = 1;
-prn_value_x_constant         = 10; 
+prn_value_x_constant         = 1; 
 
 %Figures?
 fig = 1; 
@@ -97,6 +97,9 @@ agt_value_abaractual_t = zeros(T,1);
 agt_exp_theta_t     = zeros(T,1); 
 agt_value_utility   = zeros(T,N);
 agt_value_utilitynorm   = zeros(T,N);
+agt_value_reputil     =zeros(T,N); 
+agt_value_contFB    = zeros(T,1);
+agt_value_utilityFB = zeros(T,1);
 
 %pr_value_thetahat_t             = zeros(T,1);
 pr_value_thetahataactual_t      = zeros(T,1);
@@ -108,7 +111,7 @@ pr_value_aP_t                    = zeros(T,1);
 pr_value_aPFB_t                  = zeros(T,1); 
 pr_value_utility                  = zeros(T,1);
 pr_value_utilitynorm                  = zeros(T,1);
-
+pr_value_utilityFB              = zeros(T,1);
 
 %% SIMULATE GAME
     %We reset variables, since they need proper dimensions
@@ -230,14 +233,20 @@ pr_value_aPFB_t(t,1)    =  ((pop_value_w+pop_value_theta_t(t,1))*pr_value_varphi
 %We only calculate direct utilities, as reputational ones cancel out over
 %population
 for i=1:N
-agt_value_utility(t,i)  = (agt_exp_theta_t(t,i)+pop_value_theta_t(t,1))*agt_value_a_it(t,i)...
+agt_value_utility(t,i)  = (agt_value_v_it(t,i)+pop_value_theta_t(t,1))*agt_value_a_it(t,i)...
                             +(pop_value_w+pop_value_theta_t(t,1))*...
                             (pop_value_abar_t(t,1)+pr_value_aP_t(t,1))...
                             - 0.5*agt_value_a_it(t,i)^2;
+ 
+
+
 %Normalize utility by value of normal good 
 agt_value_utilitynorm(t,i) =  agt_value_utility(t,i)/pop_value_theta_t(t,1);     
 
 end %End short utility loop
+
+%Check that reputation cancels out 
+%mean(mean(agt_value_reputil,2)-pop_mean_vbar,1);
 
 %Principal
 pr_value_utility(t,1) = pr_value_lambda*(pr_value_alpha*((pop_mean_vbar+pop_value_theta_t(t,1))*pop_value_abar_t(t,1)) ...
@@ -263,6 +272,23 @@ pr_value_utilitynorm(t,1) =  pr_value_utility(t,1)/(pop_value_theta_t(t,1));
 %     
 %     end
 
+%Agent aggregate first-best
+agt_value_contFB(t,1) = pop_mean_vbar + pop_value_w+ pop_value_theta_t(t,1);
+
+%First-best utilities 
+agt_value_utilityFB(t,1)   = (pop_mean_vbar+pop_value_theta_t(t,1))*agt_value_contFB(t,1) ...
+                            +(pop_value_w+pop_value_theta_t(t,1))*...
+                            (agt_value_contFB(t,1)+pr_value_aPFB_t(t,1)) ...
+                            - 0.5*agt_value_contFB(t,1)^2;
+
+pr_value_utilityFB(t,1) = pr_value_lambda*(pr_value_alpha*((pop_mean_vbar+pop_value_theta_t(t,1))*agt_value_contFB(t,1)) ...
+                        +(pop_value_w+pop_value_theta_t(t,1))*...
+                            (agt_value_contFB(t,1)+pr_value_aPFB_t(t,1)) ...
+                            - 0.5*agt_value_contFB(t,1)^2) ...
+                        +(1-pr_value_lambda)*(pr_value_b*((pop_value_w+pop_value_theta_t(t,1))*(agt_value_contFB(t,1)+pr_value_aPFB_t(t,1)))...
+                        - pr_value_kp*0.5*pr_value_aPFB_t(t,1)^2);                        
+
+
 end %End of loop over time periods
 
 %Compute a few averages we use in the the figures for ease
@@ -279,10 +305,12 @@ agt_value_avgutility       = mean(agt_value_utility,2);
 figure;  set(gcf, 'Position', [80,80, 800, 800])
         subplot(2,2,[1 2])
         fig1 = plot([pop_value_theta_t, pop_mean_thetabar_t, pr_exp_theta_t,agt_exp_avgexptheta_t]);
-        lgd = legend('True value','Prior belief', 'Principal expectation', 'Avg. agent expectation',...
+        lgd = legend('True value','Prior belief', 'Principal', 'Average agent',...
             'Location', 'northwest');
         lgd.FontSize = 10;
         lgd.FontName = 'CMU Serif';
+        lgd_pos = get(lgd,'position'); 
+        set(lgd,'position',[lgd_pos(1), lgd_pos(2), 1.4*lgd_pos(3), lgd_pos(4)])
         title('Evolution of expectations','FontName','CMU Serif');
         xlabel('Time period','FontName','CMU Serif');
         ylabel('Value of public good','FontName','CMU Serif');
@@ -290,46 +318,52 @@ figure;  set(gcf, 'Position', [80,80, 800, 800])
         set(fig1, {'LineStyle'}, {'-';'--';'-';'-'});
         set(fig1, {'Marker'}, {'none';'none';'o';'square'}); 
         set(fig1, 'Markersize', 3); 
-        set(fig1, {'MarkerFaceColor'}, {[ 0    0.4470    0.7410];[0.8500    0.3250    0.0980]...
-                                ;[0.4940    0.1840    0.5560];[0.9290    0.6940    0.1250]});
-        %set(fig1, 'Linewidth', 1.2);
-        set(fig1, {'Color'}, {[ 0    0.4470    0.7410];[0.8500    0.3250    0.0980]...
-                                ;[0.4940    0.1840    0.5560];[0.9290    0.6940    0.1250]});
-        %LineStyleOrder('-','-','-','--');
+        set(fig1, {'MarkerFaceColor'}, {[0.4940    0.1840    0.5560];[0.6350    0.0780    0.1840]...
+                                ;[0    0.4470    0.7410];[0.8500    0.3250    0.0980]});
+        set(fig1, 'Linewidth', 1);
+        set(fig1, {'Color'}, {[0.4940    0.1840    0.5560];[0.6350    0.0780    0.1840]...
+                                ;[0    0.4470    0.7410];[0.8500    0.3250    0.0980]});
+        
         
         
         subplot(2,2,3)
-        fig2 = plot([pr_value_aPFB_t,pr_value_aP_t,agt_value_abaractual_t]);
-        lgd = legend('Principals first-best contribution','Principals actual contribution', 'Avg. agent contribution',...
+        fig2 = plot([pr_value_aPFB_t,pr_value_aP_t,agt_value_contFB,agt_value_abaractual_t]);
+        lgd = legend('Principal (FB)','Principal', 'Avg. agent (FB)', 'Avg. agent',...
             'Location', 'northwest');
         lgd.FontSize = 10;
         lgd.FontName = 'CMU Serif';
+        lgd_pos = get(lgd,'position'); 
+        set(lgd,'position',[lgd_pos(1), lgd_pos(2), 1.4*lgd_pos(3), lgd_pos(4)])
         title('Contributions','FontName','CMU Serif');
         xlabel('Time period','FontName','CMU Serif');
         ylabel('Contributions','FontName','CMU Serif');
-        set(fig2, {'Color'}, {[ 0    0.4470    0.7410]...
-                                ;[0.4940    0.1840    0.5560];[0.9290    0.6940    0.1250]});
-        set(fig2, {'Marker'}, {'none';'o';'square'}); 
-        set(fig2, 'Markersize', 3); 
-        set(fig2, {'MarkerFaceColor'}, {[ 0    0.4470    0.7410]...
-                                ;[0.4940    0.1840    0.5560];[0.9290    0.6940    0.1250]});
-        %set(fig1, {'LineStyle'}, {'-';'-';'-';'-'});
+        set(fig2, {'Color'}, {[0.4940    0.1840    0.5560];[0   0.4470    0.7410]...
+                    ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980]});
+        set(fig2, {'Marker'}, {'none';'o';'x';'square'}); 
+        set(fig2, 'Markersize', 2); 
+        set(fig2, {'MarkerFaceColor'}, {[0.4940    0.1840    0.5560];[0   0.4470    0.7410]...
+                    ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980]});
+         set(fig1, 'Linewidth', 1);
    
         subplot(2,2,4)
-        fig3 = plot([pr_value_utility, agt_value_avgutility]);
-        lgd = legend('Principals utility', 'Avg. agent utility', ...
+        fig3 = plot([pr_value_utilityFB, pr_value_utility, agt_value_utilityFB, agt_value_avgutility]);
+        lgd = legend('Principal (FB)','Principal', 'Avg. agent (FB)', 'Avg. agent', ...
             'Location', 'northwest');
         lgd.FontSize = 10;
         lgd.FontName = 'CMU Serif';
+        lgd_pos = get(lgd,'position'); 
+        set(lgd,'position',[lgd_pos(1), lgd_pos(2), 1.4*lgd_pos(3), lgd_pos(4)])
         title('Utility','FontName','CMU Serif'); 
         xlabel('Time period','FontName','CMU Serif');
         ylabel('Utility','FontName','CMU Serif');
-        set(fig3, {'Color'}, {[0.4940    0.1840    0.5560];[0.9290    0.6940    0.1250]});
-        set(fig3, {'Marker'}, {'o';'square'}); 
-        set(fig3, 'Markersize', 3); 
-        set(fig3, {'MarkerFaceColor'}, {[0.4940    0.1840    0.5560];[0.9290    0.6940    0.1250]});
+        set(fig3, {'Color'}, {[0.4940    0.1840    0.5560];[0   0.4470    0.7410]...
+                    ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980]});
+        set(fig3, {'Marker'}, {'none';'o';'x';'square'}); 
+        set(fig3, 'Markersize', 2); 
+        set(fig3, {'MarkerFaceColor'}, {[0.4940    0.1840    0.5560];[0   0.4470    0.7410]...
+                    ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980]});
         
-        print('C:\Users\rbjoe\Dropbox\Kugejl\9. semester\Economics of Privacy\Matlab\Images\1_Expectations', '-depsc'); 
+        print('C:\Users\rbjoe\Dropbox\Kugejl\9. semester\Economics of Privacy\Matlab\Images\1_WorkingFile', '-depsc'); 
    end %End of figures
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
