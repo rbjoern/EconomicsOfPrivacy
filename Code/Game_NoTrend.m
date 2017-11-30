@@ -6,13 +6,13 @@ seed = 163;
     rng(seed);
 
 %Number of iterations of simulations
-T = 1000; %Game runs for T periods 
+T = 100; %Game runs for T periods 
 N = 1000; %We simulate a population of N. 
 
 %Population means
 pop_mean_thetabar_0         = 5;        %unifrnd(5,10);
 pop_mean_etabar             = 0.00;     %unifrnd(0.01,0.02);
-pop_mean_vbar               = 10;          %unifrnd(2,3);
+pop_mean_vbar               = 5;          %unifrnd(2,3);
 pop_mean_mubar              = 10;           %unifrnd(1,2); %Large enough that a high share has positive motivation
 
 %Population variances
@@ -24,7 +24,7 @@ pop_var_s2mu                 = 5;
 pop_var_s2theta              = 15;
 
 %Population constants
-pop_value_w                  = 5;             %unifrnd(1,2); %Must be lower than pop_mean_vbar
+pop_value_w                  = 10;             %unifrnd(1,2); %Must be higher than pop_mean_vbar
 pr_value_lambda              = 0.5;
 pr_value_alpha               = 0.5; 
 pr_value_kp                  = 1; 

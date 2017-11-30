@@ -12,7 +12,7 @@ N = 1000; %We simulate a population of N.
 %Population means
 pop_mean_thetabar_0         = -10;        %unifrnd(5,10);
 pop_mean_etabar             = 0;     %unifrnd(0.01,0.02);
-pop_mean_vbar               = 10;          %unifrnd(2,3);
+pop_mean_vbar               = 5;          %unifrnd(2,3);
 pop_mean_mubar              = 10;           %unifrnd(1,2); %Large enough that a high share has positive motivation
 
 %Population variances
@@ -24,12 +24,12 @@ pop_var_s2mu                 = 5;
 pop_var_s2theta              = 15;
 
 %Population constants
-pop_value_w                  = 5;             %unifrnd(1,2); %Must be lower than pop_mean_vbar
+pop_value_w                  = 10;             %unifrnd(1,2); %Must be higher than pop_mean_vbar
 pr_value_lambda              = 0.5;
 pr_value_alpha               = 0.5; 
 pr_value_kp                  = 1; 
 pr_value_b                   = 0.5;
-prn_value_x_constant         = 1; 
+prn_value_x_constant         = 0.3; 
 
 %Figures?
 fig =0; 
@@ -49,7 +49,7 @@ for n = 1:2
 
 %% CHANGE SPECIFIC PARAMETERS
     if n==2
-    prn_value_x_constant = 100*prn_value_x_constant;
+    prn_value_x_constant = 10*prn_value_x_constant;
     end 
 
 %% RUN GAME FROM FUNCTION
@@ -163,10 +163,10 @@ figure;  set(gcf, 'Position', [80,80, 800, 800])
                                  ;[0.3010    0.7450    0.9330]...
                                  ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
         %set(fig1, {'LineStyle'}, {'-';'-';'-';'-'});
-   
-%         subplot(2,2,[3 4])
-%         fig3 = plot([pr_value_utilityx, agt_value_avgutilityx]);
-%         lgd = legend('Principal (low x)','Principal (high x)', 'Average agent (low x)','Average agent (high x)', ...
+%    
+% subplot(2,2,[3 4])
+%         fig3 = plot([pr_value_utilityFB, pr_value_utilityx, agt_value_utilityFB, agt_value_avgutilityx]);
+%         lgd = legend('Principal (FB)','Principal (low x)','Principal (high x)', 'Avg. agent (FB)', 'Avg. agent (low x)','Avg. agent (high x)', ...
 %             'Location', 'northwest');
 %         lgd.FontSize = 8;
 %         lgd.FontName = 'Century';
@@ -175,14 +175,15 @@ figure;  set(gcf, 'Position', [80,80, 800, 800])
 %         title('Utility','FontName','Century'); 
 %         xlabel('Time period','FontName','Century');
 %         ylabel('Utility','FontName','Century');
-%         set(fig3, {'Color'}, {[  0    0.4470    0.7410]...
-%                                 ;[0.3010    0.7450    0.9330];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
-%         set(fig3, {'Marker'}, {'o';'^';'square';'diamond'}); 
-%         set(fig3, 'Markersize', 3); 
-%         set(fig3, {'MarkerFaceColor'}, {[  0    0.4470    0.7410]...
-%                                 ;[0.3010    0.7450    0.9330];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
-%         
-        %print('C:\Users\rbjoe\Dropbox\Kugejl\9. semester\Economics of Privacy\Matlab\Images\1_Expectations', '-depsc'); 
+%         set(fig3, {'Color'}, {[0.4940    0.1840    0.5560];[  0    0.4470    0.7410]...
+%                                  ;[0.3010    0.7450    0.9330]...
+%                                  ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
+%         set(fig3, {'Marker'}, {'none';'o';'^';'x';'square';'diamond'}); 
+%         set(fig3, 'Markersize', 2); 
+%         set(fig3, {'MarkerFaceColor'}, {[0.4940    0.1840    0.5560];[  0    0.4470    0.7410]...
+%                                  ;[0.3010    0.7450    0.9330]...
+%                                  ;[  0.4660    0.6740    0.1880];[0.8500    0.3250    0.0980];[0.9290    0.6940    0.1250]});
+%         %print('C:\Users\rbjoe\Dropbox\Kugejl\9. semester\Economics of Privacy\Matlab\Images\1_Expectations', '-depsc'); 
    end %End of figures    
      
  

@@ -88,7 +88,7 @@ classdef EoP
 % Population means
 % pop_mean_thetabar_0         = pop_mean_thetabar_0
 %     pop_mean_etabar         = unifrnd(0.01,0.02);
-% pop_mean_vbar               = unifrnd(2,3);
+% pop_mean_vbar               = unifrnd(1,2);
 % pop_mean_mubar              = unifrnd(1,2); %Large enough that a high share has positive motivation
 % 
 % Population variances 
@@ -100,7 +100,7 @@ classdef EoP
 % pop_var_s2theta              = unifrnd(15,20);
 % 
 % Population constants
-% pop_value_w                  = unifrnd(1,2); %Must be lower than pop_mean_vbar
+% pop_value_w                  = unifrnd(2,3); %Must be higher than pop_mean_vbar
 % pr_value_lambda              = 0.5;
 % pr_value_alpha               = 0.8; 
 % pr_value_kp                  = 1; 

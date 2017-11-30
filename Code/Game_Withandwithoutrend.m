@@ -24,7 +24,7 @@ pop_var_s2mu                 = unifrnd(2,8);
 pop_var_s2theta              = unifrnd(15,20);
 
 %Population constants
-pop_value_w                  = unifrnd(1,2); %Must be lower than pop_mean_vbar
+pop_value_w                  = unifrnd(9,10); %Must be higher than pop_mean_vbar
 pr_value_lambda              = 0.5;
 pr_value_alpha               = 0.8; 
 pr_value_kp                  = 1; 
